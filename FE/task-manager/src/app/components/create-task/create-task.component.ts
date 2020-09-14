@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { TaskManipulationService } from './../../services/tasks-crud-operations/task-manipulation.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Task } from 'src/app/interfaces/task-interface';
 
 
 @Component({
@@ -9,9 +11,10 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 })
 export class CreateTaskComponent implements OnInit {
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private taskService: TaskManipulationService) { }
 
   createTask: FormGroup;
+  tasks: Task[];
 
   ngOnInit(): void {
     this.createTask = this.fb.group({
@@ -20,8 +23,9 @@ export class CreateTaskComponent implements OnInit {
     });
   }
 
-  saveTask(): void {
-    console.log(this.createTask);
-    // TODO: save task with the use of service.
+  saveTask(): any {
+    const task = this.createTask.value;
+    this.taskService.createTask(task).subscribe();
   }
+
 }
