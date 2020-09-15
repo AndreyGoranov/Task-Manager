@@ -1,8 +1,8 @@
+import { Router } from '@angular/router';
 import { TransferDataService } from './../../services/data-transfer/transfer-data.service';
 import { TaskManipulationService } from './../../services/tasks-crud-operations/task-manipulation.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Task } from 'src/app/interfaces/task-interface';
 
 @Component({
   selector: 'app-edit-task',
@@ -11,7 +11,10 @@ import { Task } from 'src/app/interfaces/task-interface';
 })
 export class EditTaskComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private taskService: TaskManipulationService, private dataTransfer: TransferDataService) { }
+  constructor(private fb: FormBuilder,
+              private taskService: TaskManipulationService,
+              private dataTransfer: TransferDataService,
+              private router: Router) { }
 
   editTask: FormGroup;
   editTaskId: string;
@@ -28,7 +31,8 @@ export class EditTaskComponent implements OnInit {
 
   submitEditedTask(): any {
     const editBody = this.editTask.value;
-    this.taskService.editTask(this.editTaskId, editBody);
+    this.taskService.editTask(this.editTaskId, editBody).subscribe();
+    this.router.navigateByUrl('');
   }
 
 }

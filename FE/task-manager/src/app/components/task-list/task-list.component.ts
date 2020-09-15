@@ -1,3 +1,4 @@
+import { ConfirmationDialogService } from './../../services/confirmation-dialog/confirmation-dialog.service';
 import { TransferDataService } from './../../services/data-transfer/transfer-data.service';
 import { TaskManipulationService } from './../../services/tasks-crud-operations/task-manipulation.service';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
@@ -12,7 +13,10 @@ import { Router } from '@angular/router';
 })
 export class TaskListComponent implements OnInit, OnDestroy {
 
-  constructor(private taskService: TaskManipulationService, private transferData: TransferDataService, private router: Router) { }
+  constructor(private taskService: TaskManipulationService,
+              private transferData: TransferDataService,
+              private router: Router,
+              private dialogService: ConfirmationDialogService) { }
 
   @Input() listTitle = 'Main List';
   tasks: Observable<Task[]>;
@@ -29,8 +33,19 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
 
   deleteTask(id: string): any {
-    this.taskService.deleteTask(id).subscribe(() => {
-      this.update.next(true);
+    const options = {
+      title: 'Delete Task',
+      message: 'Are you sure you want to delete this Task ?',
+      cancelText: 'Cancel',
+      confirmText: 'Confirm'
+    };
+    this.dialogService.open(options);
+    this.dialogService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        this.taskService.deleteTask(id).subscribe(() => {
+          this.update.next(true);
+        });
+      }
     });
   }
 

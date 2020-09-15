@@ -33,8 +33,7 @@ export class TaskManipulationService {
   }
 
   editTask(id: string, value: Task): any {
-    const params = new HttpParams().set('id', id);
-    return this.http.patch(this.ROOT_URL, value, {params}).pipe<any>(
+    return this.http.patch(this.ROOT_URL + `/${id}`, value).pipe<any>(
       catchError(this.handleError)
     );
   }
