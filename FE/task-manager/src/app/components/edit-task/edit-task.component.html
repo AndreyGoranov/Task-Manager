@@ -1,9 +1,9 @@
 <div>
     <h1>Edit Task</h1>
-    <form *ngIf="editTask" [formGroup]="editTask">
+    <form *ngIf="editTask" [formGroup]="editTask" (ngSubmit)="submitEditedTask()">
         <input type="text" formControlName="title">
         <textarea formControlName="description"></textarea>
-        <button type="submit" (click)="submitEditedTask()">Submit</button>
+        <button type="submit">Submit</button>
         <button type="button" [routerLink]=" '' ">Cancel</button>
     </form>
 </div>

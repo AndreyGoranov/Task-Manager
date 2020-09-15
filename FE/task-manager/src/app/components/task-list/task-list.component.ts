@@ -21,11 +21,29 @@ export class TaskListComponent implements OnInit, OnDestroy {
   @Input() listTitle = 'Main List';
   tasks: Observable<Task[]>;
   update = new BehaviorSubject(false);
-  isChecked = false;
+  checkedTasks = {};
 
   ngOnInit(): void {
     this.tasks = this.taskService.getTasks();
+    this.tasks.subscribe(tasks => {
+      tasks.forEach(task => {
+        if (task.completed) {
+          this.checkedTasks[task.id] = true;
+        }
+      });
+    });
     this.update.subscribe(update => update === true ? this.tasks = this.taskService.getTasks() : null);
+  }
+
+  handleTaskStatus(task: Task): any {
+    const taskId = String(task.id);
+    if (this.checkedTasks[taskId]) {
+      task.completed = true;
+      this.taskService.editTask(taskId, task).subscribe();
+    } else {
+      task.completed = false;
+      this.taskService.editTask(taskId, task).subscribe();
+    }
   }
 
   editTask(id: string): any {

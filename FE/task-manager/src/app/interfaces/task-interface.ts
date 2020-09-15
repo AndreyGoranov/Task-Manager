@@ -5,6 +5,7 @@ export interface Task {
     priority: number;
     createdAt: number;
     updatedAt: number;
+    completed: boolean;
 }
 
 

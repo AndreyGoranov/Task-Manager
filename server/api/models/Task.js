@@ -12,7 +12,8 @@ module.exports = {
     priority: { type: 'number', allowNull: null },
     project: {
       model: 'project'
-    }
+    },
+    completed: {type: 'boolean', allowNull: true}
   }
 };
 

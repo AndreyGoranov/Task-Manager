@@ -1,14 +1,20 @@
-<div [ngClass]="{'completed-task': isChecked}">
+<div>
     <h2>{{listTitle}}</h2>
     <div class="task-container" *ngFor="let task of tasks | async">
-        <small (click)="editTask(task.id)">Edit</small>
-        <small (click)="deleteTask(task.id)">Delete</small>
-        <small>Complete</small>
-        <div>
-            <mat-slide-toggle [(ngModel)]="isChecked" title="Slide to complete"></mat-slide-toggle>
-            <app-task [title]="task.title" [description]="task.description" [startedAt]="task.createdAt"></app-task>
+        <div [ngClass]="{'completed-task': checkedTasks[task.id]}">
+            <small (click)="editTask(task.id)">Edit</small>
+            <small (click)="deleteTask(task.id)">Delete</small>
+            <small>Complete</small>
+            <div>
+                <mat-checkbox [(ngModel)]="checkedTasks[task.id]" 
+                    [checked]="checkedTasks[task.id]" 
+                    (change)="handleTaskStatus(task)"
+                    title="Toggle task status">
+               </mat-checkbox>
+                <app-task [title]="task.title" [description]="task.description" [startedAt]="task.createdAt"></app-task>
+            </div>
+            <small>priority</small>
         </div>
-        <small>priority</small>
     </div>
 </div>
 
