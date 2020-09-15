@@ -1,3 +1,7 @@
 .task-container {
     border: 2px solid red;
 }
+
+.completed-task {
+    background-color: green;
+}

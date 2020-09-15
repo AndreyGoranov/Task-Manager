@@ -21,6 +21,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
   @Input() listTitle = 'Main List';
   tasks: Observable<Task[]>;
   update = new BehaviorSubject(false);
+  isChecked = false;
 
   ngOnInit(): void {
     this.tasks = this.taskService.getTasks();
