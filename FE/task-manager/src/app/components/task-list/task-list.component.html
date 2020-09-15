@@ -1,0 +1,13 @@
+<div>
+    <h2>{{listTitle}}</h2>
+    <div class="task-container" *ngFor="let task of tasks | async">
+        <small (click)="editTask(task.id)">Edit</small>
+        <small (click)="deleteTask(task.id)">Delete</small>
+        <small>Complete</small>
+        <app-task [title]="task.title" [description]="task.description" [startedAt]="task.createdAt"></app-task>
+        <small>priority</small>
+    </div>
+    
+</div>
+
+
