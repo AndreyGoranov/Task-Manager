@@ -1,12 +1,14 @@
-import { TestBed } from '@angular/core/testing';
-
+import { HttpClientModule } from '@angular/common/http';
+import { TestBed, async } from '@angular/core/testing';
 import { TaskManipulationService } from './task-manipulation.service';
 
 describe('TaskManipulationService', () => {
   let service: TaskManipulationService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule]
+    });
     service = TestBed.inject(TaskManipulationService);
   });
 

@@ -1,6 +1,9 @@
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditTaskComponent } from './edit-task.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('EditTaskComponent', () => {
   let component: EditTaskComponent;
@@ -8,6 +11,12 @@ describe('EditTaskComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterTestingModule
+      ],
       declarations: [ EditTaskComponent ]
     })
     .compileComponents();

@@ -20,19 +20,15 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
   @Input() listTitle = 'Main List';
   tasks: Observable<Task[]>;
+  isListEmpty = false;
   update = new BehaviorSubject(false);
   checkedTasks = {};
+  currentList: string;
 
   ngOnInit(): void {
     this.tasks = this.taskService.getTasks();
-    this.tasks.subscribe(tasks => {
-      tasks.forEach(task => {
-        if (task.completed) {
-          this.checkedTasks[task.id] = true;
-        }
-      });
-    });
-    this.update.subscribe(update => update === true ? this.tasks = this.taskService.getTasks() : null);
+    this.handleTasksSubscription();
+    this.handleTasksListUpdate();
   }
 
   handleTaskStatus(task: Task): any {
@@ -64,6 +60,26 @@ export class TaskListComponent implements OnInit, OnDestroy {
         this.taskService.deleteTask(id).subscribe(() => {
           this.update.next(true);
         });
+      }
+    });
+  }
+
+  handleTasksSubscription(): any {
+    this.tasks.subscribe(tasks => {
+      tasks.length === 0 ? this.isListEmpty = true : this.isListEmpty = false;
+      tasks.forEach(task => {
+        if (task.completed) {
+          this.checkedTasks[task.id] = true;
+        }
+      });
+    });
+  }
+
+  handleTasksListUpdate(): any {
+    this.update.subscribe(update => {
+      if (update) {
+        this.tasks = this.taskService.getTasks();
+        this.handleTasksSubscription();
       }
     });
   }

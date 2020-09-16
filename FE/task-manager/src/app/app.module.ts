@@ -13,6 +13,7 @@ import { EditTaskComponent } from './components/edit-task/edit-task.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { TaskListNavigationComponent } from './components/task-list-navigation/task-list-navigation.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     TaskListComponent,
     TaskComponent,
     EditTaskComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    TaskListNavigationComponent
   ],
   imports: [
     BrowserModule,

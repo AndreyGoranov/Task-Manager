@@ -1,7 +1,7 @@
 import { Task } from './../../interfaces/task-interface';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -46,7 +46,8 @@ export class TaskManipulationService {
   }
 
   handleError(error: HttpErrorResponse): any {
-    return Observable.throw(error.message || 'server error.');
+    alert(error.message || 'server error');
+    return throwError(error.message || 'server error.');
   }
 
 }

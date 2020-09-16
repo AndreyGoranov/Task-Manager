@@ -1,17 +1,17 @@
 <div>
     <h2>{{listTitle}}</h2>
+    <div *ngIf="isListEmpty">List is empty</div>
     <div class="task-container" *ngFor="let task of tasks | async">
         <div [ngClass]="{'completed-task': checkedTasks[task.id]}">
             <small (click)="editTask(task.id)">Edit</small>
             <small (click)="deleteTask(task.id)">Delete</small>
-            <small>Complete</small>
             <div>
                 <mat-checkbox [(ngModel)]="checkedTasks[task.id]" 
                     [checked]="checkedTasks[task.id]" 
                     (change)="handleTaskStatus(task)"
                     title="Toggle task status">
                </mat-checkbox>
-                <app-task [title]="task.title" [description]="task.description" [startedAt]="task.createdAt"></app-task>
+                <app-task *ngIf="task.title" [title]="task.title" [description]="task.description" [startedAt]="task.createdAt"></app-task>
             </div>
             <small>priority</small>
         </div>
