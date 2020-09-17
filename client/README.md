@@ -1,5 +1,5 @@
 **How to start the application:**
-To start the application navigate to task-manager folder trough any terminal and simply type "ng s" and wait untill the application is compliled. After that open the application in your browser on  http://localhost:4200/, also make sure that your backend server is up and running too, [for info check ](frontend-assignment\API_DOC.md).
+To start the application navigate to task-manager folder trough any terminal and simply type "ng s" and wait untill the application is compliled. After that open the application in your browser on  http://localhost:4200/, also make sure that your backend server is up and running too, for info check [API_DOC.md].
 
 
 **How I solved the task:**
