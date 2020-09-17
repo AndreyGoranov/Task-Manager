@@ -15,4 +15,12 @@ describe('TaskManipulationService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('getTasks should retrieve all tasks', (done: DoneFn) => {
+    service.getTasks().subscribe(value => {
+      expect(value.length).toBeGreaterThan(0);
+      done();
+    });
+  });
+
 });

@@ -11,8 +11,10 @@ export class TaskComponent implements OnInit {
   @Input() title: string;
   @Input() description: string;
   @Input() startedAt: number;
+  @Input() endDate: number;
 
   ngOnInit(): void {
   }
+
 
 }

@@ -1,19 +1,28 @@
-<div>
-    <h2>{{listTitle}}</h2>
+<div class="task-list-container">
+    <h2 class="list-title">{{listTitle}}</h2>
     <div *ngIf="isListEmpty">List is empty</div>
-    <div class="task-container" *ngFor="let task of tasks | async">
-        <div [ngClass]="{'completed-task': checkedTasks[task.id]}">
-            <small (click)="editTask(task.id)">Edit</small>
-            <small (click)="deleteTask(task.id)">Delete</small>
-            <div>
+    <div *ngFor="let task of tasks | async">
+        <div class="task-main-container" [ngClass]="{'completed-task': checkedTasks[task.id]}">
+            <div class="task-interface-container">
+                <p (click)="editTask(task.id)">Edit</p>
+                <p (click)="deleteTask(task.id)">Delete</p> 
+            </div>
+            
+            <div class="task-data-container">
                 <mat-checkbox [(ngModel)]="checkedTasks[task.id]" 
                     [checked]="checkedTasks[task.id]" 
                     (change)="handleTaskStatus(task)"
-                    title="Toggle task status">
+                    title="Toggle task status"
+                    class="task-checkbox">
                </mat-checkbox>
-                <app-task *ngIf="task.title" [title]="task.title" [description]="task.description" [startedAt]="task.createdAt"></app-task>
+                <app-task *ngIf="task.title" 
+                [title]="task.title" 
+                [description]="task.description" 
+                [startedAt]="task.createdAt"
+                [endDate]="completedTasks[task.id]"
+                ></app-task>
             </div>
-            <small>priority</small>
+            <small class="priority-select">priority</small>
         </div>
     </div>
 </div>

@@ -13,7 +13,8 @@ module.exports = {
     project: {
       model: 'project'
     },
-    completed: {type: 'boolean', allowNull: true}
+    completed: {type: 'boolean', allowNull: true},
+    completedAt: {type: 'number', allowNull: true}
   }
 };
 

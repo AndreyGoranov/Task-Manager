@@ -6,6 +6,7 @@ export interface Task {
     createdAt: number;
     updatedAt: number;
     completed: boolean;
+    completedAt: number;
 }
 
 

@@ -31,4 +31,9 @@ describe('EditTaskComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('editTask form should be valid on init', async () => {
+    expect(component.editTask.status).toBeTruthy();
+  });
+
 });

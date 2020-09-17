@@ -1,3 +1,4 @@
+import { TaskComponent } from './../task/task.component';
 import { ConfirmationDialogService } from './../../services/confirmation-dialog/confirmation-dialog.service';
 import { TransferDataService } from './../../services/data-transfer/transfer-data.service';
 import { TaskManipulationService } from './../../services/tasks-crud-operations/task-manipulation.service';
@@ -23,6 +24,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
   isListEmpty = false;
   update = new BehaviorSubject(false);
   checkedTasks = {};
+  completedTasks = {};
   currentList: string;
 
   ngOnInit(): void {
@@ -35,9 +37,14 @@ export class TaskListComponent implements OnInit, OnDestroy {
     const taskId = String(task.id);
     if (this.checkedTasks[taskId]) {
       task.completed = true;
+      const completionDate = new Date().getTime();
+      task.completedAt = completionDate;
+      this.completedTasks[taskId] = completionDate;
       this.taskService.editTask(taskId, task).subscribe();
     } else {
       task.completed = false;
+      task.completedAt = null;
+      this.completedTasks[taskId] = null;
       this.taskService.editTask(taskId, task).subscribe();
     }
   }
@@ -67,13 +74,25 @@ export class TaskListComponent implements OnInit, OnDestroy {
   handleTasksSubscription(): any {
     this.tasks.subscribe(tasks => {
       tasks.length === 0 ? this.isListEmpty = true : this.isListEmpty = false;
-      tasks.forEach(task => {
-        if (task.completed) {
-          this.checkedTasks[task.id] = true;
-        }
-      });
+      this.handleCheckedTasks(tasks);
+      this.handleCompletedTasksDate(tasks);
     });
   }
+
+  handleCheckedTasks(tasks): any {
+    tasks.forEach(task => {
+      if (task.completed) {
+        this.checkedTasks[task.id] = true;
+      }
+    });
+  }
+
+  handleCompletedTasksDate(tasks): any {
+    tasks.forEach(task => {
+      this.completedTasks[task.id] = task.completedAt;
+    });
+  }
+
 
   handleTasksListUpdate(): any {
     this.update.subscribe(update => {

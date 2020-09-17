@@ -1,0 +1,50 @@
+.edit-form-container {
+    display: flex;
+    justify-content: center;
+}
+
+.edit-task-form {
+    display: flex;
+    flex-direction: column;
+    width: 373px;
+    background-color: rgb(72, 151, 151);
+    border: 1px solid rgb(53, 53, 53);
+    border-radius: 5px;
+    padding: 20px 5px 20px 5px;
+}
+
+.form-header {
+    text-align: center;
+}
+
+.title-input {
+    height: 23px;
+    margin-bottom: 5px;
+    border: 1px solid silver;
+    outline-color: silver;
+    outline-width: 1px;
+}
+
+.description-input {
+    border: 1px solid silver;
+    outline-color: silver;
+    outline-width: 1px;
+}
+
+.submit-button {
+    margin-top: 20px;
+    width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+    height: 25px;
+    font-weight: bold;
+}
+
+#cancel-button {
+    width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 25px;
+    font-weight: bold;
+}

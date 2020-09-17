@@ -1,0 +1,15 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.app-title {
+    text-align: center;
+}
+
+.nav {
+    margin-left: auto;
+    margin-right: auto;
+}

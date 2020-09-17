@@ -1,0 +1,14 @@
+.nav-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.nav-container p {
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: transform .2s; 
+}
+
+.nav-container p:hover {
+    transform: scale(1.2);
+}
