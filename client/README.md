@@ -1,1 +1,11 @@
-ADD THE SOLUTION FOR YOUR SUBMISSION IN THIS FOLDER
+**How to start the application:**
+To start the application navigate to task-manager folder trough any terminal and simply type "ng s" and wait untill the application is compliled. After that open the application in your browser on  http://localhost:4200/, also make sure that your backend server is up and running too, [for info check ](frontend-assignment\API_DOC.md).
+
+
+**How I solved the task:**
+1) Having in mind the complexity of the application i decided at this stage I will need only one (the root) module
+2) I decided I will need routing in the application to bring better UX.
+3) I thought about the component hierarchy and decided it will consist of AppComponent --> TaskListComponent --> Task Component where TaskComponent is just a "dummy" component which will recieve data from TaskListComponent and render it. TaskListComponent will provide the interface for the task (edit/delete/complete) and will encapsulate most of the business logic in the app  taking advantage of  TaskManipulationService which provides the functionality for the CRUD operations and handles the http requests and http errors. Using the Rxjs library I subscribe to the observables returned by the service and extract the data from the API or I just simply trigger the http request.
+With the help of Behaviour subject the TaskListComponent listens for changes and upon delete I rerender the TaskListComponent with the new data.
+For creating tasks I use the router to navigate to CreateTaskComponent and I do the same for EditTaskComponent to get the id of the task that user wants to edit I use a DataTransfer service. After Submiting or Canceling the TaskListComponent rerenders and in the ngOnInit hook I get the new data.
+When a task is completed I have a bit different approach for better UX. I save the data to the database but instead of rerendering the list I keep the checked tasks in an empty object which gets augumented by [(ngModel)] two way binding syntax. And use the ngClass directive for changing the style of checked (marked as ready) task using the template syntax. Upon page refresh or rerender by any other event I subscribe to the data and fill the object again with the completed tasks an fill another object with the completion date. That way I also keep in track when the list is empty and notify the user.
