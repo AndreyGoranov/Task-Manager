@@ -3,12 +3,12 @@
     flex-direction: row;
 }
 
-.nav-container p {
+.nav-container h2 {
     cursor: pointer;
-    margin-left: 1rem;
+    margin-left: 2rem;
     transition: transform .2s; 
 }
 
-.nav-container p:hover {
+.nav-container h2:hover {
     transform: scale(1.2);
 }

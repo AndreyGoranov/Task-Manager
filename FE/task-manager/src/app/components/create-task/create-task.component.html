@@ -1,7 +1,9 @@
 <div class="create-task-container">
     <form class="create-task-form" [formGroup]="createTask" (ngSubmit)="saveTask()">
         <h2 class="form-header">Create Task</h2>
+        <label class="title-label">Task title:</label>
         <input class="title-input" #titleInputRef type="text" placeholder="Title" formControlName="title">
+        <label class="description-label">Task description:</label>
         <textarea class="description-input" placeholder="Description" rows="5" cols="50" formControlName="description"></textarea>
         <button class="submit-button" [disabled]="createTask.invalid" type="submit">Submit</button>
         <button id="cancelButton" [routerLink]=" '' ">Cancel</button>

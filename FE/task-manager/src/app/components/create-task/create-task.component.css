@@ -29,6 +29,7 @@
     border: 1px solid silver;
     outline-color: silver;
     outline-width: 1px;
+    resize: vertical;
 }
 
 .submit-button {

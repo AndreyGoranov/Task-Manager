@@ -1,3 +1,5 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TaskManipulationService } from './../../services/tasks-crud-operations/task-manipulation.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,7 +16,8 @@ describe('TaskListComponent', () => {
       imports: [
         HttpClientModule,
         RouterTestingModule,
-        MatDialogModule
+        MatDialogModule,
+        BrowserAnimationsModule
       ],
       declarations: [ TaskListComponent ]
     })
@@ -30,4 +33,5 @@ describe('TaskListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

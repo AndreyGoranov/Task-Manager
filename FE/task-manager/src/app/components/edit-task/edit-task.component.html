@@ -1,7 +1,9 @@
 <div class="edit-form-container">
     <form class="edit-task-form" *ngIf="editTask" [formGroup]="editTask" (ngSubmit)="submitEditedTask()">
         <h2 class="form-header">Edit Task</h2>
+        <label class="title-label">Task title:</label>
         <input class="title-input" type="text" formControlName="title">
+        <label class="description-label">Task description:</label>
         <textarea class="description-input" rows="5" cols="50" formControlName="description"></textarea>
         <button [disabled]="editTask.invalid" class="submit-button" type="submit">Submit</button>
         <button id="cancel-button" type="button" [routerLink]=" '' ">Cancel</button>
