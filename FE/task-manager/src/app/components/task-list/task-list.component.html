@@ -1,4 +1,4 @@
-<div class="task-list-container">
+<div @todoList class="task-list-container">
     <h2 class="list-title">{{listTitle}}</h2>
     <div *ngIf="isListEmpty">List is empty</div>
     <div *ngFor="let task of tasks | async">

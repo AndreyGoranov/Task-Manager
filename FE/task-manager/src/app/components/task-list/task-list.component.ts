@@ -1,4 +1,3 @@
-import { TaskComponent } from './../task/task.component';
 import { ConfirmationDialogService } from './../../services/confirmation-dialog/confirmation-dialog.service';
 import { TransferDataService } from './../../services/data-transfer/transfer-data.service';
 import { TaskManipulationService } from './../../services/tasks-crud-operations/task-manipulation.service';
@@ -6,12 +5,22 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Task } from 'src/app/interfaces/task-interface';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+import { trigger, transition, useAnimation } from '@angular/animations';
+import { slideIn } from 'src/app/utilities/animations/animations';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.css']
+  styleUrls: ['./task-list.component.css'],
+  animations: [
+    trigger('todoList', [
+      transition(':enter', [
+        useAnimation(slideIn),
+      ])
+    ])
+  ]
 })
+
 export class TaskListComponent implements OnInit, OnDestroy {
 
   constructor(private taskService: TaskManipulationService,

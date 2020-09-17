@@ -23,7 +23,7 @@ export class EditTaskComponent implements OnInit {
     this.editTaskId = this.dataTransfer.id;
     this.taskService.getSingleTask(this.editTaskId).subscribe(task => {
       this.editTask = this.fb.group({
-        title: [task[0].title, Validators.required],
+        title: [task[0].title, [Validators.required, Validators.minLength(1)]],
         description: [task[0].description]
       });
     });
@@ -31,7 +31,9 @@ export class EditTaskComponent implements OnInit {
 
   submitEditedTask(): any {
     const editBody = this.editTask.value;
-    this.taskService.editTask(this.editTaskId, editBody).subscribe();
+    if (this.editTask.dirty) {
+      this.taskService.editTask(this.editTaskId, editBody).subscribe();
+    }
     this.router.navigateByUrl('');
   }
 
