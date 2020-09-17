@@ -3,6 +3,8 @@
     flex-direction: column;
     margin-left: 100px;
     margin-right: 100px;
+    background-color: beige;
+    height: 100vh;
 }
 
 .app-title {

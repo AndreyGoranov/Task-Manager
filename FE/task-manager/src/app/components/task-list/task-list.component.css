@@ -8,6 +8,7 @@
     display: flex;
     flex-direction: column;
     border: 1px solid darkslategray;
+    background:rgb(225, 236, 243);
     margin-bottom: 5px;
     padding: 5px 10px 5px 10px;
 }
