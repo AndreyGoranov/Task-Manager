@@ -28,12 +28,13 @@ export class TaskListComponent implements OnInit, OnDestroy {
               private router: Router,
               private dialogService: ConfirmationDialogService) { }
 
-  @Input() listTitle = 'Main List';
+  listTitle = 'Main List';
   tasks: Observable<Task[]>;
   isListEmpty = false;
   update = new BehaviorSubject(false);
   checkedTasks = {};
   completedTasks = {};
+  tasksPriority = {};
   currentList: string;
 
   ngOnInit(): void {
@@ -83,22 +84,12 @@ export class TaskListComponent implements OnInit, OnDestroy {
   handleTasksSubscription(): any {
     this.tasks.subscribe(tasks => {
       tasks.length === 0 ? this.isListEmpty = true : this.isListEmpty = false;
-      this.handleCheckedTasks(tasks);
-      this.handleCompletedTasksDate(tasks);
-    });
-  }
-
-  handleCheckedTasks(tasks): any {
-    tasks.forEach(task => {
-      if (task.completed) {
-        this.checkedTasks[task.id] = true;
-      }
-    });
-  }
-
-  handleCompletedTasksDate(tasks): any {
-    tasks.forEach(task => {
-      this.completedTasks[task.id] = task.completedAt;
+      tasks.forEach(task => {
+        if (task.completed) {
+          this.checkedTasks[task.id] = true;
+          this.completedTasks[task.id] = task.completedAt;
+        }
+      });
     });
   }
 
