@@ -1,3 +1,5 @@
+import { LocalstorageService } from './../../services/localstorage/localstorage.service';
+import { TransferDataService } from './../../services/data-transfer/transfer-data.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskListNavigationComponent implements OnInit {
 
-  constructor() { }
+  constructor(private dataTransfer: TransferDataService, private localstorage: LocalstorageService) { }
+
+  lists: string[];
 
   ngOnInit(): void {
+    this.lists = this.localstorage.getData('lists');
   }
 
+  handleListSelection(list: string): any {
+    this.dataTransfer.currentList.next(list);
+  }
 }

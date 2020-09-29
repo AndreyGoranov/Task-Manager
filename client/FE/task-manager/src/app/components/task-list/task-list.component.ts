@@ -1,3 +1,6 @@
+import { LocalstorageService } from './../../services/localstorage/localstorage.service';
+import { filter, map } from 'rxjs/operators';
+import { TransformPriorityPipe } from './../../pipes/transform-priority.pipe';
 import { ConfirmationDialogService } from './../../services/confirmation-dialog/confirmation-dialog.service';
 import { TransferDataService } from './../../services/data-transfer/transfer-data.service';
 import { TaskManipulationService } from './../../services/tasks-crud-operations/task-manipulation.service';
@@ -26,7 +29,8 @@ export class TaskListComponent implements OnInit, OnDestroy {
   constructor(private taskService: TaskManipulationService,
               private transferData: TransferDataService,
               private router: Router,
-              private dialogService: ConfirmationDialogService) { }
+              private dialogService: ConfirmationDialogService,
+              private localstorage: LocalstorageService) { }
 
   listTitle = 'Main List';
   tasks: Observable<Task[]>;
@@ -38,9 +42,23 @@ export class TaskListComponent implements OnInit, OnDestroy {
   currentList: string;
 
   ngOnInit(): void {
-    this.tasks = this.taskService.getTasks();
-    this.handleTasksSubscription();
+    // this.localstorage.saveData(this.lists);
+    // this.lists = this.localstorage.getData('lists');
+    // console.log(this.lists);
+    this.update.next(true);
     this.handleTasksListUpdate();
+    this.handleListSelection();
+  }
+
+  handleListSelection(): any {
+    this.transferData.currentList.subscribe(list => {
+      console.log('list changed', list);
+      if (list) {
+        this.currentList = list;
+        this.listTitle = this.currentList ;
+        this.update.next(true);
+      }
+    });
   }
 
   handleTaskStatus(task: Task): any {
@@ -93,11 +111,17 @@ export class TaskListComponent implements OnInit, OnDestroy {
     });
   }
 
-
   handleTasksListUpdate(): any {
     this.update.subscribe(update => {
       if (update) {
-        this.tasks = this.taskService.getTasks();
+        console.log('list title in update:', this.listTitle);
+        if (this.listTitle === 'Main List') {
+          this.tasks = this.taskService.getTasks();
+        } else if (this.listTitle === 'Completed') {
+          this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.completed === true)));
+        } else if (this.listTitle === 'To Do') {
+          this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.completed === false)));
+        }
         this.handleTasksSubscription();
       }
     });

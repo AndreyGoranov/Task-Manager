@@ -22,7 +22,7 @@
                 [endDate]="completedTasks[task.id]"
                 ></app-task>
             </div>
-            <small class="priority-select">priority</small>
+            <small [appHandleColor]="task.priority" class="priority-select">{{task.priority | transformPriority}}</small>
         </div>
     </div>
 </div>

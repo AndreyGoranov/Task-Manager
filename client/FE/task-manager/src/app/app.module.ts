@@ -14,6 +14,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TaskListNavigationComponent } from './components/task-list-navigation/task-list-navigation.component';
+import { CreateListComponent } from './components/lists/create-list/create-list.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { TransformPriorityPipe } from './pipes/transform-priority.pipe';
+import { HandleColorDirective } from './directives/handle-color.directive';
 
 @NgModule({
   declarations: [
@@ -23,7 +27,10 @@ import { TaskListNavigationComponent } from './components/task-list-navigation/t
     TaskComponent,
     EditTaskComponent,
     ConfirmationDialogComponent,
-    TaskListNavigationComponent
+    TaskListNavigationComponent,
+    CreateListComponent,
+    TransformPriorityPipe,
+    HandleColorDirective
   ],
   imports: [
     BrowserModule,
@@ -34,7 +41,8 @@ import { TaskListNavigationComponent } from './components/task-list-navigation/t
     RouterModule,
     BrowserAnimationsModule,
     MatDialogModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
