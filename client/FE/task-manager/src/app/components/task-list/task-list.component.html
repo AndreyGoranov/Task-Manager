@@ -1,5 +1,12 @@
 <div @todoList class="task-list-container">
-    <h2 class="list-title">{{listTitle}}</h2>
+    <div class="list-heading-container">
+        <h2 class="list-title">{{listTitle}}</h2>
+        <img src="https://img.icons8.com/dusk/64/000000/add-property.png"
+            [routerLink]=" 'create-task' "
+        />
+        <img src="https://img.icons8.com/dusk/64/000000/filled-trash.png"/>
+    </div>
+    
     <div *ngIf="isListEmpty">List is empty</div>
     <div *ngFor="let task of tasks | async">
         <div class="task-main-container" [ngClass]="{'completed-task': checkedTasks[task.id]}">
@@ -22,7 +29,24 @@
                 [endDate]="completedTasks[task.id]"
                 ></app-task>
             </div>
-            <small [appHandleColor]="task.priority" class="priority-select">{{task.priority | transformPriority}}</small>
+            <div class="priority-menu">
+                <mat-menu #menu="matMenu" yPosition="above">
+                    <label mat-menu-item [appHandleColor]="-1">Low
+                       <input (click)="handlePrioritySelection(task, -1)" [(ngModel)]="tasksPriority[task.id]" type="radio" value="-1"> 
+                    </label>
+                    
+                    <label mat-menu-item [appHandleColor]="0">Normal
+                        <input (click)="handlePrioritySelection(task, 0)" [(ngModel)]="tasksPriority[task.id]" type="radio" value="0"> 
+                     </label>
+                    
+                     <label mat-menu-item [appHandleColor]="1">High
+                        <input (click)="handlePrioritySelection(task, 1)" [(ngModel)]="tasksPriority[task.id]" type="radio" value="1"> 
+                     </label>
+                </mat-menu>
+                <small [matMenuTriggerFor]="menu" [appHandleColor]="tasksPriority[task.id]" class="priority-select">{{tasksPriority[task.id] | transformPriority}}</small>
+            </div>
+            
+            
         </div>
     </div>
 </div>

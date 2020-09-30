@@ -40,18 +40,21 @@ export class TaskListComponent implements OnInit, OnDestroy {
   completedTasks = {};
   tasksPriority = {};
   currentList: string;
+  listSelectSubscription: Observable<any>;
 
   ngOnInit(): void {
-    // this.localstorage.saveData(this.lists);
-    // this.lists = this.localstorage.getData('lists');
-    // console.log(this.lists);
     this.update.next(true);
     this.handleTasksListUpdate();
     this.handleListSelection();
   }
 
+  handlePrioritySelection(task: Task, priority: number): any {
+    task.priority = priority;
+    this.taskService.editTask(String(task.id), task).subscribe();
+  }
+
   handleListSelection(): any {
-    this.transferData.currentList.subscribe(list => {
+      this.transferData.currentList.subscribe(list => {
       console.log('list changed', list);
       if (list) {
         this.currentList = list;
@@ -103,6 +106,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.tasks.subscribe(tasks => {
       tasks.length === 0 ? this.isListEmpty = true : this.isListEmpty = false;
       tasks.forEach(task => {
+        this.tasksPriority[task.id] = task.priority;
         if (task.completed) {
           this.checkedTasks[task.id] = true;
           this.completedTasks[task.id] = task.completedAt;
@@ -121,6 +125,8 @@ export class TaskListComponent implements OnInit, OnDestroy {
           this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.completed === true)));
         } else if (this.listTitle === 'To Do') {
           this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.completed === false)));
+        } else {
+          this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.list === this.listTitle)));
         }
         this.handleTasksSubscription();
       }
@@ -128,6 +134,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.update.unsubscribe();
+    // this.update.unsubscribe();
   }
 }

@@ -14,10 +14,15 @@ export class TaskListNavigationComponent implements OnInit {
   lists: string[];
 
   ngOnInit(): void {
-    this.lists = this.localstorage.getData('lists');
+    this.handleListInsertion();
   }
 
   handleListSelection(list: string): any {
     this.dataTransfer.currentList.next(list);
   }
+
+  handleListInsertion(): any {
+    this.dataTransfer.currentList.subscribe( () => this.lists = this.localstorage.getData('lists'));
+  }
+
 }

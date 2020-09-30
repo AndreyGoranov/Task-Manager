@@ -4,6 +4,10 @@
     padding: 20px 50px 60px 50px;
 }
 
+.task-list-container .list-heading-container {
+    justify-content: center;
+}
+
 .task-main-container {
     display: flex;
     flex-direction: column;
@@ -36,6 +40,7 @@
 
 .list-title {
     text-align: center;
+    padding-right: 2rem;
 }
 
 .completed-task {
@@ -54,4 +59,17 @@
     margin-top: auto;
     margin-bottom: auto;
 }
+
+.list-heading-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.priority-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
 

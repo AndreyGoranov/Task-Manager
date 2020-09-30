@@ -1,6 +1,5 @@
 <div class="nav-container">
-    <h2 [routerLink]=" 'create-task' ">Add Task</h2>
-    <h2>Add List</h2>
+    <h2 [routerLink]=" 'create-list' ">Add List</h2>
     <h2 [matMenuTriggerFor]="menu">Select List</h2>
     <mat-menu #menu="matMenu">
         <div *ngFor="let menuItem of lists">

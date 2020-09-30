@@ -7,6 +7,7 @@ export interface Task {
     updatedAt: number;
     completed: boolean;
     completedAt: number;
+    list: string;
 }
 
 

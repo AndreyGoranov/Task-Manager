@@ -1,1 +1,9 @@
-<p>create-list works!</p>
+<div>
+    <h2>Add List</h2>
+    <input [(ngModel)]="listTitle" type="text" placeholder="Title">
+    <h3>You can group already existing tasks into this list</h3>
+    <div *ngFor="let task of tasks | async">
+        <mat-checkbox (change)="handleSelection($event, task)">{{task.title}}</mat-checkbox>
+    </div>
+    <button [disabled]="!listTitle" (click)="saveList()">Create</button>
+</div>

@@ -1,23 +1,24 @@
-import { Directive, OnInit, Renderer2, ElementRef, Input } from '@angular/core';
+import { Directive, OnInit, Renderer2, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Directive({
   selector: '[appHandleColor]'
 })
-export class HandleColorDirective implements OnInit {
+export class HandleColorDirective implements OnChanges {
 
   @Input() appHandleColor: number;
 
   constructor(private renderer: Renderer2, private elRef: ElementRef) { }
 
+  colors = {
+    '-1': 'grey',
+    0: 'green',
+    1: 'red'
+  };
 
-  ngOnInit(): void {
-
-    const colors = {
-      '-1': 'grey',
-      0: 'green',
-      1: 'red'
-    };
-
-    this.renderer.setStyle(this.elRef.nativeElement, 'color', colors[this.appHandleColor]);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.appHandleColor) {
+      console.log('color changed');
+      this.renderer.setStyle(this.elRef.nativeElement, 'color', this.colors[this.appHandleColor]);
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { TransferDataService } from './../../services/data-transfer/transfer-data.service';
 import { Router } from '@angular/router';
 import { TaskManipulationService } from './../../services/tasks-crud-operations/task-manipulation.service';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
@@ -15,14 +16,20 @@ export class CreateTaskComponent implements OnInit,  AfterViewInit {
   constructor(private fb: FormBuilder,
               private taskService: TaskManipulationService,
               private router: Router,
+              private transferData: TransferDataService,
               private renderer: Renderer2) { }
 
   createTask: FormGroup;
   tasks: Task[];
   @ViewChild('titleInputRef')
   titleInputRef: ElementRef;
+  currentList: string;
 
   ngOnInit(): void {
+    this.transferData.currentList.subscribe(value => {
+      this.currentList = value;
+    });
+
     this.createTask = this.fb.group({
       title: ['', Validators.required],
       description: ['']
@@ -35,6 +42,7 @@ export class CreateTaskComponent implements OnInit,  AfterViewInit {
 
   saveTask(): any {
     const task = this.createTask.value;
+    task.list = this.currentList;
     this.taskService.createTask(task).subscribe();
     this.router.navigateByUrl('');
   }
