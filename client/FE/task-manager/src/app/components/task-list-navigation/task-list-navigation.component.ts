@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { LocalstorageService } from './../../services/localstorage/localstorage.service';
 import { TransferDataService } from './../../services/data-transfer/transfer-data.service';
 import { Component, OnInit } from '@angular/core';
@@ -9,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskListNavigationComponent implements OnInit {
 
-  constructor(private dataTransfer: TransferDataService, private localstorage: LocalstorageService) { }
+  constructor(private dataTransfer: TransferDataService, private localstorage: LocalstorageService, private router: Router) { }
 
   lists: string[];
 
@@ -19,6 +20,7 @@ export class TaskListNavigationComponent implements OnInit {
 
   handleListSelection(list: string): any {
     this.dataTransfer.currentList.next(list);
+    this.router.navigateByUrl('');
   }
 
   handleListInsertion(): any {
