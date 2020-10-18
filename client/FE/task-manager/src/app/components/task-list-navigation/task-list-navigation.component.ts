@@ -13,18 +13,18 @@ export class TaskListNavigationComponent implements OnInit {
   constructor(private dataTransfer: TransferDataService, private localstorage: LocalstorageService, private router: Router) { }
 
   lists: string[];
-
+ 
   ngOnInit(): void {
-    this.handleListInsertion();
+    this.lists = this.localstorage.getData('lists') || this.dataTransfer.lists;
+    this.dataTransfer.newListInserted.subscribe(() => {
+      this.lists = this.localstorage.getData('lists');
+      
+    })
   }
 
   handleListSelection(list: string): any {
     this.dataTransfer.currentList.next(list);
     this.router.navigateByUrl('');
-  }
-
-  handleListInsertion(): any {
-    this.dataTransfer.currentList.subscribe( () => this.lists = this.localstorage.getData('lists'));
   }
 
 }

@@ -1,3 +1,83 @@
 .start-date {
     padding-right: 1rem;
 }
+
+.task-title {
+	word-break: break-all;
+}
+
+.task-description {
+	word-break: break-all;
+}
+
+.edit-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.edit-form {
+	display: flex;
+	flex-direction: column;
+	margin-left: 2rem;
+}
+
+.edit-form input {
+	background-color: lightblue;
+	margin-bottom: 1rem;
+	border: none;
+	outline: none;
+	max-width: auto;
+}
+
+.edit-title-input {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.completed-input {
+	text-decoration: line-through;
+}
+
+.description-input {
+	outline: none;
+	border: none;
+	background-color: lightblue;
+	box-sizing: border-box;
+	overflow: hidden;
+	resize: none;
+	width: 100%;
+}
+
+.date-input {
+	width: 170px;
+}
+
+.edit-submit-button {
+	margin-left: auto;
+	box-shadow: 5px 10px;
+	border: 2px solid black;
+	border-radius: 0;
+}
+
+.edit-interface-container {
+	margin-left: auto;
+    display: flex;
+	flex-direction: row;
+}
+
+.edit-interface-container p {
+	cursor: pointer;
+    margin-left: 5px;
+	transition: transform .2s;
+}
+
+.edit-interface-container p:hover {
+	transform: scale(1.2);
+	font-weight: bold;
+}
+
+@keyframes rotate {
+	100% {
+		transform: rotate(1turn);
+	}
+}

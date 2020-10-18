@@ -17,7 +17,6 @@ export class HandleColorDirective implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.appHandleColor) {
-      console.log('color changed');
       this.renderer.setStyle(this.elRef.nativeElement, 'color', this.colors[this.appHandleColor]);
     }
   }

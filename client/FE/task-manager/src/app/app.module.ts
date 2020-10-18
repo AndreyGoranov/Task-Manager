@@ -18,6 +18,8 @@ import { CreateListComponent } from './components/lists/create-list/create-list.
 import { MatMenuModule } from '@angular/material/menu';
 import { TransformPriorityPipe } from './pipes/transform-priority.pipe';
 import { HandleColorDirective } from './directives/handle-color.directive';
+import { DatePipe } from '@angular/common';
+import { InputFieldSizeDirective } from './directives/input-field-size.directive';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { HandleColorDirective } from './directives/handle-color.directive';
     TaskListNavigationComponent,
     CreateListComponent,
     TransformPriorityPipe,
-    HandleColorDirective
+    HandleColorDirective,
+    InputFieldSizeDirective
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,7 @@ import { HandleColorDirective } from './directives/handle-color.directive';
     MatCheckboxModule,
     MatMenuModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

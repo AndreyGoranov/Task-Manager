@@ -9,6 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class ConfirmationDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: {
+    dialogType: string,
     cancelText: string,
     confirmText: string,
     message: string,
@@ -29,6 +30,7 @@ export class ConfirmationDialogComponent implements OnInit {
   }
   @HostListener('keydown.esc')
     public onEsc(): any {
+      console.log('esc pressed')
       this.close(false);
   }
 

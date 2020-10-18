@@ -1,32 +1,40 @@
 <div @todoList class="task-list-container">
     <div class="list-heading-container">
+        <img (click)="goBackList()" class="go-back-list" src="https://img.icons8.com/nolan/64/long-arrow-left--v1.png" title="Previous list" />
         <h2 class="list-title">{{listTitle}}</h2>
-        <img src="https://img.icons8.com/dusk/64/000000/add-property.png"
-            [routerLink]=" 'create-task' "
+        <img (click)="goForwardList()" class="go-forward-list" src="https://img.icons8.com/nolan/64/long-arrow-right--v1.png" title="Next list"/>
+        <img class="add-task-image" *ngIf="currentList !== 'Completed'" src="https://img.icons8.com/fluent/48/000000/create-new.png"
+            (click)="openCreateTaskModal()" title="Create Task"
         />
-        <img src="https://img.icons8.com/dusk/64/000000/filled-trash.png"/>
+        <img class="delete-list-image" (click)="deleteList()" src="https://img.icons8.com/color/48/000000/delete-forever.png"
+            title="Delete List"
+        />
     </div>
     
     <div *ngIf="isListEmpty">List is empty</div>
     <div *ngFor="let task of tasks | async">
-        <div class="task-main-container" [ngClass]="{'completed-task': checkedTasks[task.id]}">
+        <div class="task-main-container" #taskContainer [ngClass]="{'completed-task': checkedTasks[task.id], 'rainbow': editingTask[task.id]}">
             <div class="task-interface-container">
-                <p (click)="editTask(task.id)">Edit</p>
-                <p (click)="deleteTask(task.id)">Delete</p> 
+                <p *ngIf="!editingTask[task.id]" (click)="editTask(task.id)">Edit</p>
+                <p *ngIf="!editingTask[task.id]" (click)="deleteTask(task.id)">Delete</p> 
             </div>
             
             <div class="task-data-container">
-                <mat-checkbox [(ngModel)]="checkedTasks[task.id]" 
+                <mat-checkbox *ngIf="!editingTask[task.id]" [(ngModel)]="checkedTasks[task.id]" 
                     [checked]="checkedTasks[task.id]" 
                     (change)="handleTaskStatus(task)"
                     title="Toggle task status"
                     class="task-checkbox">
                </mat-checkbox>
-                <app-task *ngIf="task.title" 
+                <app-task *ngIf="task.title"
+                class="task"
                 [title]="task.title" 
                 [description]="task.description" 
                 [startedAt]="task.createdAt"
                 [endDate]="completedTasks[task.id]"
+                [taskId]="task.id"
+                [taskContainer]="taskContainer"
+                [completed]="task.completed"
                 ></app-task>
             </div>
             <div class="priority-menu">
@@ -43,7 +51,7 @@
                         <input (click)="handlePrioritySelection(task, 1)" [(ngModel)]="tasksPriority[task.id]" type="radio" value="1"> 
                      </label>
                 </mat-menu>
-                <small [matMenuTriggerFor]="menu" [appHandleColor]="tasksPriority[task.id]" class="priority-select">{{tasksPriority[task.id] | transformPriority}}</small>
+                <span style="color: darkcyan; font-weight: bold; margin-right: 5px;">Priority:</span><small [matMenuTriggerFor]="menu" [appHandleColor]="tasksPriority[task.id]" class="priority-select">{{tasksPriority[task.id] | transformPriority}}</small>
             </div>
             
             

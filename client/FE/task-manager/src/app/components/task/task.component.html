@@ -1,6 +1,23 @@
-<div>
-    <h1>{{title}}</h1>
-    <p *ngIf="description">Description: {{description}}</p>
+<div *ngIf="!edit" >
+    <h1 class="task-title" [ngClass]="{'completed-input': completed}">{{title}}</h1>
+    <p class="task-description" *ngIf="description" [ngClass]="{'completed-input': completed}">Description: {{description}}</p>
     <small class="start-date">Started at: {{startedAt | date}}</small>
     <small *ngIf="endDate">Completed at: {{endDate | date}}</small>
+</div>
+
+<div *ngIf="edit" class="edit-container">
+    <div class="edit-interface-container">
+        <p (click)="saveTaskChanges()">Save</p>
+        <p (click)="cancelEdit()">Cancel</p>
+    </div>
+    <form [formGroup]="editForm" class="edit-form" >
+        <input class="edit-title-input" type="text" formControlName="title" [appInputFieldSize]="taskContainer">
+        <label>Description:
+           <textarea type="text" class="description-input" formControlName="description"></textarea> 
+        </label>
+        <label>Started at:
+            <input class="date-input" type="date" formControlName="startedAt">
+        </label>
+    </form>
+    
 </div>

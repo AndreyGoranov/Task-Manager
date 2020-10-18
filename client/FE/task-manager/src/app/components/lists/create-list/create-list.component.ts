@@ -20,27 +20,38 @@ export class CreateListComponent implements OnInit {
 
   tasks: Observable<Task[]>;
   listTitle: string;
-
+  selectedTasks =  {};
+    
   ngOnInit(): void {
     this.tasks = this.taskService.getTasks();
   }
 
-  handleSelection(e, task): any {
+  handleSelection(e, task: Task): any {
+    console.log(task);
     if (e.checked) {
-      task.list = this.listTitle;
-      this.taskService.editTask(task.id, task).subscribe();
+      this.selectedTasks[task.id] = task;
     } else {
-      task.list = 'Main List';
-      this.taskService.editTask(task.id, task).subscribe();
+      this.selectedTasks[task.id] = null;
     }
   }
 
   saveList(): any {
-    const lists = this.localstorage.getData('lists');
-    lists.push(this.listTitle);
-    this.localstorage.saveData(lists);
+    this.dataTransfer.lists.push(this.listTitle);
+    this.localstorage.saveData(this.dataTransfer.lists);
+    this.writeListToTask();
+    this.dataTransfer.newListInserted.next(this.listTitle);
     this.dataTransfer.currentList.next(this.listTitle);
     this.router.navigateByUrl('');
+  }
+
+  writeListToTask(): any {
+    for(let id in this.selectedTasks) {
+      const body = this.selectedTasks[id];
+      if (body !== null) {
+        body.list = this.listTitle;
+        this.taskService.editTask(id, body).subscribe();
+      }  
+    }
   }
 
 }

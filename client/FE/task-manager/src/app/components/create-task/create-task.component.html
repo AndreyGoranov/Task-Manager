@@ -1,11 +1,20 @@
 <div class="create-task-container">
-    <form class="create-task-form" [formGroup]="createTask" (ngSubmit)="saveTask()">
-        <h2 class="form-header">Create Task</h2>
+    <form class="create-task-form" [formGroup]="createTask">
+        <h2 class="form-header">{{data.title}}</h2>
         <label class="title-label">Task title:</label>
         <input class="title-input" #titleInputRef type="text" placeholder="Title" formControlName="title">
         <label class="description-label">Task description:</label>
         <textarea class="description-input" placeholder="Description" rows="5" cols="50" formControlName="description"></textarea>
-        <button class="submit-button" [disabled]="createTask.invalid" type="submit">Submit</button>
-        <button id="cancelButton" [routerLink]=" '' ">Cancel</button>
+        <div *ngIf="this.currentList !== 'Main List' && this.currentList && this.currentList !== 'Completed' && this.currentList !== 'To Do'">
+            <h3>You can moove tasks from other lists to this list by selecting them</h3>
+            <div *ngFor="let task of tasks | async">
+                <mat-checkbox (change)="handleSelection($event, task)">{{task.title}}</mat-checkbox>
+            </div> 
+        </div>
+        
+        <div class="form-buttons">
+            <button class="submit-button" type="submit" (click)="saveTask()">{{data.confirmText}}</button>
+            <button (click)="close(false)" id="cancelButton">{{data.cancelText}}</button>
+        </div>
     </form>
 </div>

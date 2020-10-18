@@ -13,9 +13,9 @@ module.exports = {
     project: {
       model: 'project'
     },
-    completed: {type: 'boolean', allowNull: true},
-    completedAt: {type: 'number', allowNull: true},
-    list: {type: 'string', allowNull: null, defaultsTo: 'Main List'}
+    completed: { type: 'boolean', allowNull: null, defaultsTo: false },
+    completedAt: { type: 'number', allowNull: true },
+    list: { type: 'string', allowNull: null, defaultsTo: 'Main List' }
   }
 };
 
