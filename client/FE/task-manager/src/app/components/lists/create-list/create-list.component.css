@@ -1,5 +1,35 @@
+*{
+    box-sizing: border-box;
+}
+*::before, *::after {
+    box-sizing: border-box;
+}
+
 .create-list-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border: 9px solid #4bc0f3;
+    padding-bottom: 3rem;
+    background: #007eff;
+    border-radius: 20px;
+    color: white;
+    align-items: center;
     justify-content: center;
+}
+
+.title-input {
+    width: 232px;
+    height: 25px;
     margin-left: auto;
     margin-right: auto;
+    outline: none;
+    border: 2px solid silver;
 }
+
+.submit-button {
+    margin-top: 2rem;
+    width: 120px;
+    height: 35px;
+}
+

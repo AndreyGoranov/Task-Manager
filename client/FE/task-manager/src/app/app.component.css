@@ -13,6 +13,8 @@
     font-size: 55px;
     margin-top: 1rem;
     transition: transform .7s;
+    cursor: pointer;
+    outline: none;
 }
 
 .nav {

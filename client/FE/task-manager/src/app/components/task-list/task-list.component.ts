@@ -32,7 +32,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
               private dialogService: ConfirmationDialogService,
               private localstorage: LocalstorageService) { }
 
-  listTitle = 'Main List';
+  listTitle = 'Default list';
   tasks: Observable<Task[]>;
   isListEmpty = false;
   update = new BehaviorSubject(false);
@@ -40,13 +40,13 @@ export class TaskListComponent implements OnInit, OnDestroy {
   completedTasks = {};
   tasksPriority = {};
   editingTask = {};
-  currentList = 'Main List';
+  currentList = 'Default list';
   listSelectSubscription: Observable<any>;
   
 
   ngOnInit(): void {
     this.update.next(true);
-    this.handleTasksListUpdate();
+    this.handleTasksListChange();
     this.handleListSelection();
     this.isTaskBeingEdited();
   }
@@ -56,19 +56,21 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.transferData.editState.next([false, '']);
 }
   handlePrioritySelection(task: Task, priority: number): any {
+    this.tasksPriority[task.id] = priority; 
+    console.log(this.tasksPriority);
     task.priority = priority;
     this.taskService.editTask(String(task.id), task).subscribe();
   }
 
   handleListSelection(): any {
       this.transferData.currentList.subscribe(list => {
-      console.log('list changed', list);
-      if (list) {
-        this.currentList = list;
-        this.listTitle = this.currentList ;
-        this.update.next(true);
-      }
-    });
+        console.log('list changed', list);
+        if (list) {
+          this.currentList = list;
+          this.listTitle = this.currentList ;
+          this.update.next(true);
+        }
+      });
   }
 
   handleTaskStatus(task: Task): any {
@@ -93,6 +95,10 @@ export class TaskListComponent implements OnInit, OnDestroy {
     // this.transferData.editingTaskId.next(id);
     this.transferData.editState.next([true, id]);
     console.log(this.editingTask[id]);
+  }
+
+  editList(): any {
+    
   }
 
   deleteTask(id: string): any {
@@ -126,22 +132,17 @@ export class TaskListComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleTasksListUpdate(): any {   
+  handleTasksListChange(): any {
+    const taskLists = this.transferData.lists;
     this.update.subscribe(update => {
       if (update) {
-        console.log('list title in update:', this.listTitle);
-        if (this.listTitle === 'Main List') {
-          this.tasks = this.taskService.getTasks();
-        } else if (this.listTitle === 'Completed') {
-          this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.completed === true)));
-        } else if (this.listTitle === 'To Do') {
-          this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.completed === false)));
-        } else {
-          this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.list === this.listTitle)));
-        }
+        //this.transferData.newListInserted.subscribe(list => this.currentList = list);
+        console.log('handleTasksListChange fired', taskLists);
+        this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task =>  taskLists[task.list] === this.currentList)));
         this.handleTasksSubscription();
       }
     });
+    
   }
 
   openCreateTaskModal(): any {
@@ -164,50 +165,101 @@ export class TaskListComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+// Fix
   deleteList(): any {
-    if (this.listTitle !== "Main List") {
-      const lists = this.transferData.lists;
-      lists.splice(lists.indexOf(this.listTitle), 1);
-      this.localstorage.saveData(lists);
-    }
-    console.log(this.tasks);
-    this.tasks.subscribe(tasks => {
-      tasks.forEach(task => {
-        console.log(task);
-        this.taskService.deleteTask(String(task.id)).subscribe(res => {
-          console.log(res.title + ' deleted');
+    const options = {
+      dialogType: 'confirmation',
+      title: 'Delete List',
+      message: 'Are you sure you want to delete this List ?',
+      cancelText: 'Cancel',
+      confirmText: 'Confirm'
+    };
+    this.dialogService.open(options);
+    this.dialogService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        console.log('deleting');
+        let lists = this.transferData.lists;
+        console.log(lists, 'lists');
+        const listsKeys = Object.keys(lists);
+        let removeListId: string;
+        let newLists = {};
+        console.log(this.currentList, listsKeys.length);
+        if (this.currentList !== "Default list" || listsKeys.length > 1) {
+          for (let i = 0; i < listsKeys.length; i++) {
+            if (lists[listsKeys[i]] === this.currentList) {
+              removeListId = listsKeys[i];
+              break;
+            }
+          }
+          listsKeys.splice(listsKeys.indexOf(removeListId), 1);
+          console.log(removeListId, listsKeys);
+          listsKeys.forEach(key => {
+            newLists[key] = lists[key]
+          });
+          console.log(newLists);
+          if (JSON.stringify(newLists) === JSON.stringify({})) {
+            newLists = { 1: 'Default list' };
+          }
+          this.localstorage.saveData(newLists);
+          this.transferData.lists = newLists;
+          console.log(this.transferData.lists, 'lists ot service');
+        }
+
+        this.tasks.subscribe(tasks => {
+          tasks.forEach(task => {
+            this.taskService.deleteTask(String(task.id)).subscribe(res => {
+              console.log(res.title + ' deleted');
+            });
+          });
+          this.transferData.currentList.next(newLists[listsKeys[0]] || 'Default list');
+          this.update.next(true);
         });
-      });
-      this.transferData.currentList.next('Main List');
-      this.update.next(true);
+      }
     });
-    this.transferData.newListInserted.next(null);
+
   }
 
-  goForwardList(): any {
+  handleListSwitch(direction: string): any {
     const lists = this.transferData.lists;
-    const currentListIndex = lists.indexOf(this.currentList);
-    console.log(currentListIndex);
-    if (currentListIndex < lists.indexOf(lists[lists.length - 1])) {
-      const nextListIndex = currentListIndex + 1;
-      this.transferData.currentList.next(lists[nextListIndex]);
-    } else {
-      this.transferData.currentList.next(lists[0]);
+    const listsKeys = Object.keys(lists);
+    if (listsKeys.length < 2) {
+      return;
     }
+    let currentKey: number;
+    listsKeys.forEach(key => {
+      if (lists[key] === this.currentList) {
+        currentKey = Number(key);
+      }
+    })
+    // Indexes start from 1 not 0 
+    if (direction === 'next') {
+      if (currentKey ===  listsKeys.length) {
+        this.transferData.currentList.next(lists[1]);
+      } else {
+        console.log(lists[currentKey + 1]);
+        this.transferData.currentList.next(lists[currentKey + 1]);
+      }
+    } else if (direction === 'back') {
+      if (currentKey === 1) {
+        this.transferData.currentList.next(lists[listsKeys.length]);
+      } else {
+        this.transferData.currentList.next(lists[currentKey - 1]);
+      } 
+    } 
   }
 
-  goBackList(): any {
+  sortList(byWhat: string): any {
     const lists = this.transferData.lists;
-    const currentListIndex = lists.indexOf(this.currentList);
-    console.log(currentListIndex);
-    if (currentListIndex > 0) {
-      const previousList = currentListIndex - 1;
-      this.transferData.currentList.next(lists[previousList]);
-    } else {
-      this.transferData.currentList.next(lists[lists.length - 1]);
+    if (byWhat === 'completed') {
+      this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.completed === true && lists[task.list] === this.currentList)));
+      console.log(this.tasks);
+    } else if (byWhat === 'to do') {
+      this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.completed === false && lists[task.list] === this.currentList)) );
+    } else if (byWhat === 'priority') {
+      this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => lists[task.list] === this.currentList).sort((a, b) => a.priority - b.priority)));
     }
   }
+  
 
   ngOnDestroy(): void {
     // this.update.unsubscribe();

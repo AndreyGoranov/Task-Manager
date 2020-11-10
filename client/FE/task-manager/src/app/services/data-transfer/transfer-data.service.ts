@@ -10,9 +10,7 @@ export class TransferDataService {
   constructor(private localstorage: LocalstorageService) { }
 
   id: string;
-  lists = this.localstorage.getData('lists') || ['Main List', 'Completed', 'To Do'];
-  currentList = new BehaviorSubject('');
-  newListInserted = new BehaviorSubject('');
+  lists = this.localstorage.getData('lists') || {1: 'Default list'};
+  currentList = new BehaviorSubject('Default list');
   editState = new BehaviorSubject([false, '']);
-
 }

@@ -1,9 +1,9 @@
 <div class="create-list-container">
     <h2>Add List</h2>
-    <input [(ngModel)]="listTitle" type="text" placeholder="Title">
+    <input #titleInputRef class="title-input" [(ngModel)]="listTitle" type="text" placeholder="Title">
     <h3>You can group already existing tasks into this list</h3>
     <div *ngFor="let task of tasks | async">
-        <mat-checkbox (change)="handleSelection($event, task)">{{task.title}}</mat-checkbox>
+        <mat-checkbox class="checkbox" (change)="handleSelection($event, task)">{{task.title}}</mat-checkbox>
     </div>
-    <button [disabled]="!listTitle" (click)="saveList()">Create</button>
+    <button class="submit-button" type="submit" [disabled]="!listTitle" (click)="saveList()">Create</button>
 </div>

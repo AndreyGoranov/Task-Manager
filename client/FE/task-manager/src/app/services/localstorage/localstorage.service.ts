@@ -7,12 +7,19 @@ export class LocalstorageService {
 
   constructor() { }
 
-  saveData(list: string[]): any {
+  saveData(list: any): any {
     localStorage.setItem('lists', JSON.stringify(list));
   }
 
   getData(key: string): any {
-    const data = JSON.parse(localStorage.getItem(key));
+    let data;
+    try {
+      data = JSON.parse(localStorage.getItem(key));
+    }
+    catch(err) {
+      return false;
+    }
+
     return data;
   }
 }

@@ -5,8 +5,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2, Inj
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Task } from 'src/app/interfaces/task-interface';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+
 
 
 @Component({
@@ -30,20 +29,13 @@ export class CreateTaskComponent implements OnInit,  AfterViewInit {
     private mdRef: MatDialogRef<CreateTaskComponent>) { }
 
   createTask: FormGroup;
-  tasks: Observable<Task[]>
-  @ViewChild('titleInputRef')
-  titleInputRef: ElementRef;
+  @ViewChild('titleInputRef') titleInputRef: ElementRef;
   currentList: string;
-  selectedTasks = {};
-
+  
   ngOnInit(): void {
     this.transferData.currentList.subscribe(value => {
       this.currentList = value;
     });
-
-    if (this.currentList !== "Main List" && this.currentList && this.currentList !== "Completed" && this.currentList !== "To Do") {
-      this.tasks = this.taskService.getTasks().pipe(map(tasks => tasks.filter(task => task.list !== this.currentList)));
-    }
 
     this.createTask = this.fb.group({
       title: ['', Validators.required],
@@ -69,36 +61,27 @@ export class CreateTaskComponent implements OnInit,  AfterViewInit {
     this.close(false);
   }
 
-  handleSelection(e, task: Task): any {
-    console.log(task);
-    if (e.checked) {
-      this.selectedTasks[task.id] = task;
-    } else {
-      this.selectedTasks[task.id] = null;
-    }
-  }
-
   saveTask(): any {
-    const task = this.createTask.value;
+    const lists = this.transferData.lists;
+    console.log(this.currentList, lists, 'lists pri create');
+    const task: Task = this.createTask.value;
     if (!this.createTask.invalid) {
       console.log(task);
-      task.list = this.currentList;
+      task.list = this.setTaskList(lists);
       this.taskService.createTask(task).subscribe();
+      this.close(true);
     }
-    if (this.currentList !== "Main List") {
-      this.handleSelectedTasks();
-    }
-    this.confirm();
   }
 
-  handleSelectedTasks(): any {
-    for (let task in this.selectedTasks) {
-      const taskBody: Task = this.selectedTasks[task];
-        if (taskBody !== null) {
-          taskBody.list = this.currentList;
-          this.taskService.editTask(task, taskBody).subscribe();
-        }
+  setTaskList(lists: object): any {
+    let listsKeys = Object.keys(lists);
+    for (let i = 0; i < listsKeys.length; i++) {
+      let currentKey = listsKeys[i];
+      console.log(this.currentList);
+      if (lists[currentKey] === this.currentList) {
+        return currentKey
       }
+    }
   }
 
 }

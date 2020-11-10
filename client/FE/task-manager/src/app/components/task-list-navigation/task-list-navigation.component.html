@@ -2,8 +2,8 @@
     <h2 [routerLink]=" 'create-list' ">Add List</h2>
     <h2 [matMenuTriggerFor]="menu">Select List</h2>
     <mat-menu #menu="matMenu">
-        <div *ngFor="let menuItem of lists">
-            <button (click)="handleListSelection(menuItem)" mat-menu-item>{{menuItem}}</button>
+        <div *ngFor="let key of listsKeys">
+            <button (click)="handleListSelection(lists[key])" mat-menu-item>{{lists[key]}}</button>
         </div>
         
     </mat-menu>

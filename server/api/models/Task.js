@@ -15,7 +15,7 @@ module.exports = {
     },
     completed: { type: 'boolean', allowNull: null, defaultsTo: false },
     completedAt: { type: 'number', allowNull: true },
-    list: { type: 'string', allowNull: null, defaultsTo: 'Main List' }
+    list: { type: 'string', allowNull: null }
   }
 };
 

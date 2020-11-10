@@ -1,8 +1,23 @@
 <div @todoList class="task-list-container">
     <div class="list-heading-container">
-        <img (click)="goBackList()" class="go-back-list" src="https://img.icons8.com/nolan/64/long-arrow-left--v1.png" title="Previous list" />
-        <h2 class="list-title">{{listTitle}}</h2>
-        <img (click)="goForwardList()" class="go-forward-list" src="https://img.icons8.com/nolan/64/long-arrow-right--v1.png" title="Next list"/>
+        <img (click)="handleListSwitch('back')" class="go-back-list" src="https://img.icons8.com/nolan/64/long-arrow-left--v1.png" title="Previous list" />
+        <img (click)="handleListSwitch('next')" class="go-forward-list" src="https://img.icons8.com/nolan/64/long-arrow-right--v1.png" title="Next list"/>
+        <img [matMenuTriggerFor]="sortingMenu" class="sort-tasks" title="sort" src="https://img.icons8.com/nolan/64/sort--v2.png"/>
+        <div class="sorting-menu">
+            <mat-menu #sortingMenu="matMenu" yPosition="above">
+                <p (click)="sortList('completed')" mat-menu-item [appHandleColor]="0">Completed
+                    
+                </p>
+                
+                <p (click)="sortList('to do')" mat-menu-item [appHandleColor]="1">To Do
+                
+                </p>
+                
+                <p (click)="sortList('priority')" mat-menu-item [appHandleColor]="-1">Priority
+                
+                <p>
+            </mat-menu>
+        </div>
         <img class="add-task-image" *ngIf="currentList !== 'Completed'" src="https://img.icons8.com/fluent/48/000000/create-new.png"
             (click)="openCreateTaskModal()" title="Create Task"
         />
@@ -12,49 +27,39 @@
     </div>
     
     <div *ngIf="isListEmpty">List is empty</div>
-    <div *ngFor="let task of tasks | async">
-        <div class="task-main-container" #taskContainer [ngClass]="{'completed-task': checkedTasks[task.id], 'rainbow': editingTask[task.id]}">
-            <div class="task-interface-container">
-                <p *ngIf="!editingTask[task.id]" (click)="editTask(task.id)">Edit</p>
-                <p *ngIf="!editingTask[task.id]" (click)="deleteTask(task.id)">Delete</p> 
+    <div class="task-list-background">
+        <h2 class="list-title">{{listTitle}}</h2>
+        <div *ngFor="let task of tasks | async">
+            <div class="task-main-container" #taskContainer
+                [ngClass]="{'completed-task': checkedTasks[task.id], 'rainbow': editingTask[task.id]}">
+                <div class="task-interface-container">
+                    <p *ngIf="!editingTask[task.id]" (click)="editTask(task.id)">Edit</p>
+                    <p *ngIf="!editingTask[task.id]" (click)="deleteTask(task.id)">Delete</p>
+                </div>
+    
+                <div class="task-data-container">
+                    <mat-checkbox *ngIf="!editingTask[task.id]" [(ngModel)]="checkedTasks[task.id]"
+                        [checked]="checkedTasks[task.id]" (change)="handleTaskStatus(task)" title="Toggle task status"
+                        class="task-checkbox">
+                    </mat-checkbox>
+                    <app-task *ngIf="task.title" class="task" [title]="task.title" [description]="task.description"
+                        [startedAt]="task.createdAt" [endDate]="completedTasks[task.id]" [taskId]="task.id"
+                        [taskContainer]="taskContainer" [completed]="task.completed"></app-task>
+                </div>
+                <div class="priority-menu">
+                    <mat-menu #priorityMenu="matMenu" yPosition="above">
+                        <p (click)="handlePrioritySelection(task, -1)" mat-menu-item [appHandleColor]="-1">Low</p>
+    
+                        <p (click)="handlePrioritySelection(task, 0)" mat-menu-item [appHandleColor]="0">Normal</p>
+    
+                        <p (click)="handlePrioritySelection(task, 1)" mat-menu-item [appHandleColor]="1">High</p>
+                    </mat-menu>
+                    <span style="color: darkcyan; font-weight: bold; margin-right: 5px;">Priority:</span><small
+                        [matMenuTriggerFor]="priorityMenu" [appHandleColor]="tasksPriority[task.id]"
+                        class="priority-select">{{tasksPriority[task.id] | transformPriority}}</small>
+                </div>
             </div>
-            
-            <div class="task-data-container">
-                <mat-checkbox *ngIf="!editingTask[task.id]" [(ngModel)]="checkedTasks[task.id]" 
-                    [checked]="checkedTasks[task.id]" 
-                    (change)="handleTaskStatus(task)"
-                    title="Toggle task status"
-                    class="task-checkbox">
-               </mat-checkbox>
-                <app-task *ngIf="task.title"
-                class="task"
-                [title]="task.title" 
-                [description]="task.description" 
-                [startedAt]="task.createdAt"
-                [endDate]="completedTasks[task.id]"
-                [taskId]="task.id"
-                [taskContainer]="taskContainer"
-                [completed]="task.completed"
-                ></app-task>
-            </div>
-            <div class="priority-menu">
-                <mat-menu #menu="matMenu" yPosition="above">
-                    <label mat-menu-item [appHandleColor]="-1">Low
-                       <input (click)="handlePrioritySelection(task, -1)" [(ngModel)]="tasksPriority[task.id]" type="radio" value="-1"> 
-                    </label>
-                    
-                    <label mat-menu-item [appHandleColor]="0">Normal
-                        <input (click)="handlePrioritySelection(task, 0)" [(ngModel)]="tasksPriority[task.id]" type="radio" value="0"> 
-                     </label>
-                    
-                     <label mat-menu-item [appHandleColor]="1">High
-                        <input (click)="handlePrioritySelection(task, 1)" [(ngModel)]="tasksPriority[task.id]" type="radio" value="1"> 
-                     </label>
-                </mat-menu>
-                <span style="color: darkcyan; font-weight: bold; margin-right: 5px;">Priority:</span><small [matMenuTriggerFor]="menu" [appHandleColor]="tasksPriority[task.id]" class="priority-select">{{tasksPriority[task.id] | transformPriority}}</small>
-            </div>
-            
-            
+    
         </div>
     </div>
 </div>

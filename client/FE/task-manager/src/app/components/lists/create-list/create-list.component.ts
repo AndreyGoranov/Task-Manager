@@ -3,7 +3,7 @@ import { LocalstorageService } from './../../../services/localstorage/localstora
 import { TransferDataService } from './../../../services/data-transfer/transfer-data.service';
 import { Observable } from 'rxjs';
 import { TaskManipulationService } from './../../../services/tasks-crud-operations/task-manipulation.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener } from '@angular/core';
 import { Task } from 'src/app/interfaces/task-interface';
 
 @Component({
@@ -11,19 +11,30 @@ import { Task } from 'src/app/interfaces/task-interface';
   templateUrl: './create-list.component.html',
   styleUrls: ['./create-list.component.css']
 })
-export class CreateListComponent implements OnInit {
+export class CreateListComponent implements OnInit, AfterViewInit {
 
   constructor(private taskService: TaskManipulationService,
               private dataTransfer: TransferDataService,
               private localstorage: LocalstorageService,
-              private router: Router) { }
+              private router: Router,
+              private renderer: Renderer2) { }
 
+  @ViewChild('titleInputRef') titleInputRef: ElementRef;
   tasks: Observable<Task[]>;
   listTitle: string;
   selectedTasks =  {};
     
   ngOnInit(): void {
     this.tasks = this.taskService.getTasks();
+  }
+
+  ngAfterViewInit(): void {
+    this.renderer.selectRootElement(this.titleInputRef.nativeElement).focus();
+  }
+
+  @HostListener('keydown.enter')
+  public onEnter(): any {
+    this.saveList();
   }
 
   handleSelection(e, task: Task): any {
@@ -35,22 +46,33 @@ export class CreateListComponent implements OnInit {
     }
   }
 
-  saveList(): any {
-    this.dataTransfer.lists.push(this.listTitle);
-    this.localstorage.saveData(this.dataTransfer.lists);
-    this.writeListToTask();
-    this.dataTransfer.newListInserted.next(this.listTitle);
-    this.dataTransfer.currentList.next(this.listTitle);
-    this.router.navigateByUrl('');
+  generateListId(obj): any {
+    let keys = Object.keys(obj);
+    let freeId = keys.length + 1;
+    return freeId;
   }
 
-  writeListToTask(): any {
+
+  saveList(): any {
+    if (this.listTitle) {
+      let listId = this.generateListId(this.dataTransfer.lists);
+      this.dataTransfer.lists[listId] = this.listTitle;
+      this.localstorage.saveData(this.dataTransfer.lists);
+      this.writeListToTask(listId);
+      this.dataTransfer.currentList.next(this.listTitle);
+      this.router.navigateByUrl('');
+    }
+  }
+
+  writeListToTask(listId: string): any {
     for(let id in this.selectedTasks) {
-      const body = this.selectedTasks[id];
-      if (body !== null) {
-        body.list = this.listTitle;
-        this.taskService.editTask(id, body).subscribe();
-      }  
+      if (this.selectedTasks.hasOwnProperty(id) && typeof(this.selectedTasks[id] !== 'function')) {
+        const body = this.selectedTasks[id];
+        if (body !== null) {
+          body.list = listId;
+          this.taskService.editTask(id, body).subscribe();
+        } 
+      }
     }
   }
 
